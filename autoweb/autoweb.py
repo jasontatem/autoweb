@@ -14,6 +14,7 @@ class Browser(object):
         self.allow_redirects = True
         self.debug_enable = False
         self.debug_num_chars = 120
+        self.new_cookie = dict()
 
     def save_state(self):
         """
@@ -31,6 +32,17 @@ class Browser(object):
         """
         self.response = response
         self.html = html.fromstring(response.content)
+        if 'set-cookie' in self.response.headers:
+            kv_str = [x.strip() for x in self.response.headers['set-cookie'].split(';')]
+            cookie_vals = {}
+            for kv in kv_str:
+                if '=' in kv:
+                    k = kv.split('=', 1)[0]
+                    v = kv.split('=', 1)[1]
+                    cookie_vals[k] = v
+            self.new_cookie = cookie_vals
+        else:
+            self.new_cookie = dict()
         if self.debug_enable:  # If debug enabled, we'll print out some data on each update
             self._print_debug_output()
 
@@ -38,9 +50,11 @@ class Browser(object):
         print('URL: {0}'.format(self.response.url))
         print('Response Code: {0}'.format(self.response.status_code))
         print('Content-Type: {0}'.format(self.response.headers['content-type']))
-        print('Headers: {0}, Cookies: {1}'.format(len(self.response.headers), len(self.response.cookies)))
+        print('Headers: {0} - {1}'.format(len(self.response.headers), ', '.join(self.response.headers.keys())))
+        print('New cookie set: {0}'.format(self.new_cookie))
         print('Forms: {0}, Links: {1}, Scripts: {2}'.format(len(self.forms()), len(self.links()), len(self.scripts())))
         print('Response first {0} char: {1}'.format(self.debug_num_chars, self.response.text[0:self.debug_num_chars]))
+        print('Total cookies in jar: {0}'.format(len(self.response.cookies)))
 
     def clear_history(self):
         """

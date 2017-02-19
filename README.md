@@ -17,6 +17,7 @@ Features
 * open() method to ease transition for Mechanize users
 * lxml-based HTML processing to find forms, links, scripts
 * submit_form() helper method, also similar to Mechanize
+* If set-cookie header found, cookie details captured to new_cookie attribute
 * History tracking - complete state of browser object is copied on every request.
 * Debug mode prints request information as you go for easy capture
 
