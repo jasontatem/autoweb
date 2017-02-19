@@ -30,26 +30,26 @@ Usage
 -----
 
 Create a browser object:
-```python
+```
 >>> import autoweb
 >>> b = autoweb.Browser()
 ```
     
 Open a URL with a GET:
-```python
+```
 >>> b.get('https://www.google.com')
 <Response [200]>
 ```
 Each wrapper (get, post, put, patch, delete, request) returns the requests Response object, but the most recent is also available at b.response
 
 Look at forms:
-```python
+```
 >>> b.forms()
 [{'btnI': "I'm Feeling Lucky", 'sclient': 'psy-ab', 'btnK': 'Google Search', 'site': '', 'q': '', 'source': 'hp'}]
 ```
 
 Submit a form:
-```python
+```
 >>> form_fields = b.forms()[0]  # forms() returns a list, there's only 1 on google.com
 >>> form_fields['q'] = 'python'  # Fill in the "q" field with a search term
 >>> b.submit_form(0, form_fields)  # Form index number and the dict containing values
@@ -59,13 +59,13 @@ It is not necessary to capture the fields first.  The dict supplied for the fiel
 
 Look at the first 10 links in the Google result:
 
-```python
+```
 >>> b.links()[0:10]
 ['#content', '#python-network', '/', '/psf-landing/', 'https://docs.python.org', 'https://pypi.python.org/', '/jobs/', '/community/', '#top', '/']
 ```
 
 How many links, scripts, and forms are there?
-```python
+```
 >>> len(b.links())
 197
 >>> len(b.scripts())
@@ -75,7 +75,7 @@ How many links, scripts, and forms are there?
 ```
 
 Look at a script:
-```python
+```
 >>> print(b.scripts()[2])
 
     var _gaq = _gaq || [];
@@ -90,7 +90,7 @@ Look at a script:
 ```
 
 Enable debugging:
-```python
+```
 >>> b.debug_enable = True
 >>> b.get('https://www.google.com')
 URL: https://www.google.com/
@@ -103,7 +103,7 @@ Response first 120 char: <!doctype html><html itemscope="" itemtype="http://sche
 ```
 
 Disable redirects:
-```python
+```
 >>> b.get('http://www.google.com')
 URL: https://www.google.com/?gws_rd=ssl
 Response Code: 200
@@ -128,7 +128,7 @@ Response first 120 char: <HTML><HEAD><meta http-equiv="content-type" content="te
 With allow_redirects = True (default as it is in requests), the redirection to https://www.google.com happens silently.  Setting to false exposes the 302 response.
 
 Access history:
-```python
+```
 >>> len(b.history)
 7
 >>> b.history[1].response.url
