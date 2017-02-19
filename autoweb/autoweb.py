@@ -11,6 +11,7 @@ class Browser(object):
         self.session.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
         self.response = None
         self.html = None
+        self.allow_redirects = True
 
     def save_state(self):
         """
@@ -117,7 +118,7 @@ class Browser(object):
         :return: Result of session.get() - a requests response object or exception
         """
         self.save_state()
-        response = self.session.get(*args, **kwargs)
+        response = self.session.get(allow_redirects=self.allow_redirects, *args, **kwargs)
         self.update_state(response)
         return response
 
@@ -130,7 +131,7 @@ class Browser(object):
         :return: Result of session.post() - a requests response object or exception
         """
         self.save_state()
-        response = self.session.post(*args, **kwargs)
+        response = self.session.post(allow_redirects=self.allow_redirects, *args, **kwargs)
         self.update_state(response)
         return response
 
@@ -143,7 +144,7 @@ class Browser(object):
         :return: Result of session.put() - a requests response object or exception
         """
         self.save_state()
-        response = self.session.put(*args, **kwargs)
+        response = self.session.put(allow_redirects=self.allow_redirects, *args, **kwargs)
         self.update_state(response)
         return response
 
@@ -156,7 +157,7 @@ class Browser(object):
         :return: Result of session.patch() - a requests response object or exception
         """
         self.save_state()
-        response = self.session.patch(*args, **kwargs)
+        response = self.session.patch(allow_redirects=self.allow_redirects, *args, **kwargs)
         self.update_state(response)
         return response
 
@@ -169,7 +170,7 @@ class Browser(object):
         :return: Result of session.delete() - a requests response object or exception
         """
         self.save_state()
-        response = self.session.delete(*args, **kwargs)
+        response = self.session.delete(allow_redirects=self.allow_redirects, *args, **kwargs)
         self.update_state(response)
         return response
 
@@ -182,7 +183,7 @@ class Browser(object):
         :return: Result of session.request() - a requests response object or exception
         """
         self.save_state()
-        response = self.session.request(*args, **kwargs)
+        response = self.session.request(allow_redirects=self.allow_redirects, *args, **kwargs)
         self.update_state(response)
         return response
 
