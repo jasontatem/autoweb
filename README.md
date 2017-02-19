@@ -97,9 +97,11 @@ Enable debugging:
 URL: https://www.google.com/
 Response Code: 200
 Content-Type: text/html; charset=UTF-8
-Headers: 11, Cookies: 0
+Headers: 13 - Date, Expires, Cache-Control, Content-Type, Strict-Transport-Security, P3P, Content-Encoding, Server, X-XSS-Protection, X-Frame-Options, Set-Cookie, Alt-Svc, Transfer-Encoding
+New cookie set: {'path': '/', 'domain': '.google.com', 'expires': 'Mon, 21-Aug-2017 16:47:04 GMT', 'NID': 'some session key looking stuff'}
 Forms: 1, Links: 41, Scripts: 12
 Response first 120 char: <!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="en"><head><meta content="Search the world's
+Total cookies in jar: 1
 <Response [200]>
 ```
 
@@ -109,20 +111,24 @@ Disable redirects:
 URL: https://www.google.com/?gws_rd=ssl
 Response Code: 200
 Content-Type: text/html; charset=UTF-8
-Headers: 11, Cookies: 0
+Headers: 11 - Date, Expires, Cache-Control, Content-Type, Strict-Transport-Security, Content-Encoding, Server, X-XSS-Protection, X-Frame-Options, Alt-Svc, Transfer-Encoding
+New cookie set: {}
 Forms: 1, Links: 41, Scripts: 12
 Response first 120 char: <!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="en"><head><meta content="Search the world's
+Total cookies in jar: 0
 <Response [200]>
 >>> b.allow_redirects = False
 >>> b.get('http://www.google.com')
 URL: http://www.google.com/
 Response Code: 302
 Content-Type: text/html; charset=UTF-8
-Headers: 8, Cookies: 0
+Headers: 8 - Location, Cache-Control, Content-Type, Date, Server, Content-Length, X-XSS-Protection, X-Frame-Options
+New cookie set: {}
 Forms: 0, Links: 1, Scripts: 0
 Response first 120 char: <HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
 <TITLE>302 Moved</TITLE></HEAD><BODY>
 <H1
+Total cookies in jar: 0
 <Response [302]>
 ```
 
