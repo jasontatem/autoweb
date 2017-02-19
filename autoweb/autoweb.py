@@ -12,6 +12,8 @@ class Browser(object):
         self.response = None
         self.html = None
         self.allow_redirects = True
+        self.debug_enable = False
+        self.debug_num_chars = 120
 
     def save_state(self):
         """
@@ -29,6 +31,16 @@ class Browser(object):
         """
         self.response = response
         self.html = html.fromstring(response.content)
+        if self.debug_enable:  # If debug enabled, we'll print out some data on each update
+            self._print_debug_output()
+
+    def _print_debug_output(self):
+        print('URL: {0}'.format(self.response.url))
+        print('Response Code: {0}'.format(self.response.status_code))
+        print('Content-Type: {0}'.format(self.response.headers['content-type']))
+        print('Headers: {0}, Cookies: {1}'.format(len(self.response.headers), len(self.response.cookies)))
+        print('Forms: {0}, Links: {1}, Scripts: {2}'.format(len(self.forms()), len(self.links()), len(self.scripts())))
+        print('Response first {0} char: {1}'.format(self.debug_num_chars, self.response.text[0:self.debug_num_chars]))
 
     def clear_history(self):
         """
