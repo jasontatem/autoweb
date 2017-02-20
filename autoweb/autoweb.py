@@ -46,8 +46,7 @@ class Browser(object):
         print('Headers: {0} - {1}'.format(len(self.response.headers), ', '.join(self.response.headers.keys())))
         if 'set-cookie' in self.response.headers:
             print('New cookie(s) set:')
-            for c in self.new_cookie:
-                print('{0}'.format(c))
+            print(cookie_output(self.new_cookie))
         print('Forms: {0}, Links: {1}, Scripts: {2}'.format(len(self.forms()), len(self.links()), len(self.scripts())))
         print('Response first {0} char: {1}'.format(self.debug_num_chars, self.response.text[0:self.debug_num_chars]))
         print('Total cookies in jar: {0}'.format(len(self.response.cookies)))
@@ -272,3 +271,23 @@ def parse_cookie_header(text):
                 cookie_vals[k] = v
         cookies.append(cookie_vals)
     return cookies
+
+
+def cookie_output(cookie_list):
+    """
+    Consistent looking cookie report for debug output
+    :param cookie_list: List of dicts containing k:v pairs for cookies
+    :return: String representing the cookies, with newlines between each cookie
+    """
+    out = ''
+    forced_keys = ['Domain', 'Path', 'Expires']
+    for c in cookie_list:
+        tmp_out = ''
+        for k in forced_keys:
+            v = c.get(k, None)
+            tmp_out += '{0}: {1} '.format(k, v)
+        for k in [x for x in c.keys() if x not in forced_keys]:
+            v = c.get(k, None)
+            tmp_out += '{0}: {1} '.format(k, v)
+        out += tmp_out + '\n'
+    return out[:-1]
