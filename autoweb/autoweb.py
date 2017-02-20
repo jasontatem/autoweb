@@ -6,15 +6,15 @@ import urlparse
 
 class Browser(object):
     def __init__(self):
-        self.history = list()
-        self.session = requests.Session()
-        self.session.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
-        self.response = None
-        self.html = None
-        self.allow_redirects = True
-        self.debug_enable = False
-        self.debug_num_chars = 120
-        self.new_cookie = list()
+        self.history = list()  # Will hold previous state of the session
+        self.session = requests.Session()  # The browser's Session object
+        self.session.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'  # Customize as needed
+        self.response = None  # Holds the Response object of the current request, starts as None
+        self.html = None  # Holds the lxml-processed HTML
+        self.allow_redirects = True  # Disable to stop auto-follow of 3xx responses
+        self.debug_enable = False  # Enable to get response and session data printed on every request
+        self.debug_num_chars = 120  # Debug shows this much of the response body
+        self.new_cookie = list()  # When a response contains a set-cookie header, the contents get dumped here
 
     def save_state(self):
         """
