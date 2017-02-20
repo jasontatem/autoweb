@@ -14,7 +14,7 @@ class Browser(object):
         self.allow_redirects = True
         self.debug_enable = False
         self.debug_num_chars = 120
-        self.new_cookie = dict()
+        self.new_cookie = list()
 
     def save_state(self):
         """
@@ -33,16 +33,9 @@ class Browser(object):
         self.response = response
         self.html = html.fromstring(response.content)
         if 'set-cookie' in self.response.headers:
-            kv_str = [x.strip() for x in self.response.headers['set-cookie'].split(';')]
-            cookie_vals = {}
-            for kv in kv_str:
-                if '=' in kv:
-                    k = kv.split('=', 1)[0]
-                    v = kv.split('=', 1)[1]
-                    cookie_vals[k] = v
-            self.new_cookie = cookie_vals
+            self.new_cookie = parse_cookie_header(self.response.headers['set-cookie'])
         else:
-            self.new_cookie = dict()
+            self.new_cookie = list()
         if self.debug_enable:  # If debug enabled, we'll print out some data on each update
             self._print_debug_output()
 
@@ -51,7 +44,10 @@ class Browser(object):
         print('Response Code: {0}'.format(self.response.status_code))
         print('Content-Type: {0}'.format(self.response.headers['content-type']))
         print('Headers: {0} - {1}'.format(len(self.response.headers), ', '.join(self.response.headers.keys())))
-        print('New cookie set: {0}'.format(self.new_cookie))
+        if 'set-cookie' in self.response.headers:
+            print('New cookie(s) set:')
+            for c in self.new_cookie:
+                print('{0}'.format(c))
         print('Forms: {0}, Links: {1}, Scripts: {2}'.format(len(self.forms()), len(self.links()), len(self.scripts())))
         print('Response first {0} char: {1}'.format(self.debug_num_chars, self.response.text[0:self.debug_num_chars]))
         print('Total cookies in jar: {0}'.format(len(self.response.cookies)))
@@ -253,3 +249,26 @@ def merge_two_dicts(x, y):
     z = x.copy()
     z.update(y)
     return z
+
+
+def parse_cookie_header(text):
+    """
+    Extract cookie data from the contents of a set-cookie header
+    :param text: Contents of a set-cookie header as a string
+    :return: list of dicts containing cookie k:v pairs
+    """
+    # Strip out the day names and their commas because they make later splitting harder
+    for s in ['Mon, ', 'Tue, ', 'Wed, ', 'Thu, ', 'Fri, ', 'Sat, ', 'Sun, ']:
+        text = text.replace(s, '')
+    cookies = list()
+    cookie_strs = text.split(', ')
+    for c in cookie_strs:
+        kv_str = [x.strip() for x in c.split(';')]
+        cookie_vals = dict()
+        for kv in kv_str:
+            if '=' in kv:
+                k = kv.split('=', 1)[0]
+                v = kv.split('=', 1)[1]
+                cookie_vals[k] = v
+        cookies.append(cookie_vals)
+    return cookies
